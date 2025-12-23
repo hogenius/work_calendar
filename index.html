@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>근무 시간 관리 달력</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>근무 시간 관리 달력</h1>
+        </header>
+
+        <div class="calendar-header">
+            <button id="prevMonth" class="nav-button">← 이전 달</button>
+            <h2 id="currentMonth"></h2>
+            <button id="nextMonth" class="nav-button">다음 달 →</button>
+        </div>
+
+        <div class="summary-panel">
+            <div class="summary-item">
+                <span class="summary-label">이번 달 필요 근무시간:</span>
+                <span id="requiredHours" class="summary-value">0h</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">실제 근무시간:</span>
+                <span id="actualHours" class="summary-value">0h</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">현재까지 근무 시간:</span>
+                <span id="hoursUpToNow" class="summary-value">0h</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">부족/초과:</span>
+                <span id="deficit" class="summary-value">0h</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">남은 평일 평균 필요 시간:</span>
+                <span id="averageNeeded" class="summary-value">0h</span>
+            </div>
+        </div>
+
+        <div class="calendar">
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="day-header">일</div>
+                <div class="day-header">월</div>
+                <div class="day-header">화</div>
+                <div class="day-header">수</div>
+                <div class="day-header">목</div>
+                <div class="day-header">금</div>
+                <div class="day-header">토</div>
+            </div>
+        </div>
+
+        <footer>
+            <button id="resetMonth" class="reset-button">이번 달로 돌아가기</button>
+            <button id="importData" class="import-button">데이터 넣기</button>
+            <button id="manageHolidays" class="manage-holidays-button">공휴일 관리</button>
+            <button id="clearData" class="clear-button">데이터 초기화</button>
+        </footer>
+    </div>
+
+    <!-- Import Data Modal -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>인트라넷 데이터 가져오기</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>인트라넷에서 복사한 업무시간 데이터를 붙여넣으세요:</p>
+                <textarea id="importTextarea" placeholder="날짜    구분    시간    시작 IP    종료 IP    수정 내역
+2025-12-23    업무    09:27 ~    192.168.4.214
+..."></textarea>
+                <div class="modal-actions">
+                    <button id="parseData" class="parse-button">적용하기</button>
+                    <button id="cancelImport" class="cancel-button">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Holiday Management Modal -->
+    <div id="holidayModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>공휴일 관리</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>한 줄에 하나씩 입력하세요 (형식: YYYY-MM-DD,이름)</p>
+                <textarea id="holidayTextarea" placeholder="2025-01-01,신정
+2025-01-29,설날
+2025-03-01,삼일절
+..."></textarea>
+                <div class="modal-actions">
+                    <button id="saveHolidays" class="parse-button">저장</button>
+                    <button id="exportHolidays" class="import-button">txt로 내보내기</button>
+                    <button id="importHolidays" class="import-button">txt에서 가져오기</button>
+                    <button id="cancelHoliday" class="cancel-button">취소</button>
+                </div>
+                <input type="file" id="holidayFileInput" accept=".txt" style="display: none">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
