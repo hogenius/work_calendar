@@ -540,57 +540,41 @@ function toggleVacation(date) {
 function addLockIcon(date) {
     const dateStr = formatDate(date);
 
-    // Find the day cell
-    const allCells = document.querySelectorAll('.day-cell');
-    for (let cell of allCells) {
-        const dayNumberDiv = cell.querySelector('.day-number');
-        if (!dayNumberDiv) continue;
+    // Find the day cell using data-date attribute
+    const cell = document.querySelector(`.day-cell[data-date="${dateStr}"]`);
+    if (!cell) return;
 
-        const dayText = dayNumberDiv.querySelector('span');
-        if (!dayText) continue;
+    const dayNumberDiv = cell.querySelector('.day-number');
+    if (!dayNumberDiv) return;
 
-        // Check if this is the right date by comparing day number
-        const cellDate = new Date(currentYear, currentMonth, parseInt(dayText.textContent));
-        if (formatDate(cellDate) === dateStr) {
-            // Remove existing lock icon if any
-            const existingLock = dayNumberDiv.querySelector('.lock-icon');
-            if (existingLock) existingLock.remove();
+    // Remove existing lock icon if any
+    const existingLock = dayNumberDiv.querySelector('.lock-icon');
+    if (existingLock) existingLock.remove();
 
-            // Add lock icon
-            const lockIcon = document.createElement('span');
-            lockIcon.className = 'lock-icon locked';
-            lockIcon.title = '클릭하여 잠금 해제 (자동 조정 허용)';
-            lockIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleManualLock(date);
-            });
-            dayNumberDiv.appendChild(lockIcon);
-            break;
-        }
-    }
+    // Add lock icon
+    const lockIcon = document.createElement('span');
+    lockIcon.className = 'lock-icon locked';
+    lockIcon.title = '클릭하여 잠금 해제 (자동 조정 허용)';
+    lockIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleManualLock(date);
+    });
+    dayNumberDiv.appendChild(lockIcon);
 }
 
 // Remove lock icon from a day
 function removeLockIcon(date) {
     const dateStr = formatDate(date);
 
-    // Find the day cell
-    const allCells = document.querySelectorAll('.day-cell');
-    for (let cell of allCells) {
-        const dayNumberDiv = cell.querySelector('.day-number');
-        if (!dayNumberDiv) continue;
+    // Find the day cell using data-date attribute
+    const cell = document.querySelector(`.day-cell[data-date="${dateStr}"]`);
+    if (!cell) return;
 
-        const dayText = dayNumberDiv.querySelector('span');
-        if (!dayText) continue;
+    const dayNumberDiv = cell.querySelector('.day-number');
+    if (!dayNumberDiv) return;
 
-        // Check if this is the right date
-        const cellDate = new Date(currentYear, currentMonth, parseInt(dayText.textContent));
-        if (formatDate(cellDate) === dateStr) {
-            const lockIcon = dayNumberDiv.querySelector('.lock-icon');
-            if (lockIcon) lockIcon.remove();
-            break;
-        }
-    }
+    const lockIcon = dayNumberDiv.querySelector('.lock-icon');
+    if (lockIcon) lockIcon.remove();
 }
 
 // Toggle manual lock for a day
@@ -879,6 +863,7 @@ function updateBarColor(bar, hours) {
 function createDayCell(date, isOtherMonth, calendarGrid) {
     const cell = document.createElement('div');
     cell.className = 'day-cell';
+    cell.dataset.date = formatDate(date);  // Add data-date attribute for precise date identification
 
     const isWeekendDay = isWeekend(date);
     const holidayName = isHoliday(date);
