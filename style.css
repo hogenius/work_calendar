@@ -531,18 +531,37 @@ footer {
         width: 100%;
     }
 
-    header h1 {
-        font-size: 1.3em;
-        margin-bottom: 10px;
+    /* 모바일: 헤더 고정 */
+    header {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 100;
+        padding: 10px 0;
+        margin: -10px -10px 0 -10px;
+        padding: 10px;
+        border-radius: 20px 20px 0 0;
     }
 
+    header h1 {
+        font-size: 1.3em;
+        margin-bottom: 0;
+    }
+
+    /* 모바일: 달력 헤더 고정 */
     .calendar-header {
+        position: sticky;
+        top: 50px;
+        background: #f8f9fa;
+        z-index: 99;
         flex-direction: row;
         gap: 10px;
         padding: 8px 10px;
         flex-wrap: nowrap;
         align-items: center;
         justify-content: space-between;
+        margin: 0 -10px;
+        padding: 8px 10px;
     }
 
     .calendar-header h2 {
@@ -702,14 +721,26 @@ footer {
     }
 
     /* 요약 패널 */
+    /* 모바일: 통계 패널 고정 */
     .summary-panel {
+        position: sticky;
+        top: 96px;
+        background: #e9ecef;
+        z-index: 98;
         grid-template-columns: repeat(2, 1fr);
         padding: 8px 10px;
         gap: 6px 8px;
+        margin: 0 -10px 12px -10px;
+        border-radius: 0;
     }
 
     .summary-item {
         gap: 2px;
+    }
+
+    /* 모바일: 달력 영역에 상단 여백 */
+    .calendar {
+        margin-top: 8px;
     }
 
     .summary-label {
