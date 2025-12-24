@@ -512,20 +512,26 @@ footer {
         flex-direction: row;
         gap: 10px;
         padding: 8px 10px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .calendar-header h2 {
         font-size: 1.1em;
-        width: 100%;
+        flex: 1;
         text-align: center;
-        order: -1;
+        margin: 0;
+        line-height: 1.2;
     }
 
     .nav-button {
-        flex: 1;
+        flex: 0 0 auto;
         padding: 8px 12px;
         font-size: 0.85em;
+        height: auto;
+        line-height: 1.2;
+        white-space: nowrap;
     }
 
     /* 모바일: 그리드를 1열로 변경 */
@@ -536,6 +542,11 @@ footer {
 
     /* 모바일: 요일 헤더 숨김 */
     .day-header {
+        display: none;
+    }
+
+    /* 모바일: 이전/다음 달 날짜 숨김 */
+    .day-cell.other-month {
         display: none;
     }
 
@@ -565,23 +576,39 @@ footer {
         color: #dc3545;
     }
 
-    /* 체크박스를 요일 다음에 배치 */
-    .exclude-checkbox {
+    /* 체크박스와 자물쇠 컨테이너 */
+    .checkbox-lock-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        min-width: 24px;
         margin-right: 8px;
-        margin-left: 0;
-        margin-top: 0;
-        align-self: center;
+    }
+
+    /* 체크박스 */
+    .exclude-checkbox {
+        margin: 0;
+    }
+
+    /* 자물쇠 아이콘 (체크박스 아래) */
+    .checkbox-lock-container .lock-icon {
+        margin: 0;
+        font-size: 0.9em;
     }
 
     /* 날짜 번호 영역 */
     .day-number {
-        min-width: auto;
+        min-width: 40px;
         font-size: 1.1em;
         margin-bottom: 0;
+        margin-right: 8px;
         flex-direction: row;
-        gap: 8px;
+        gap: 4px;
         justify-content: flex-start;
         align-items: center;
+        flex-shrink: 0;
     }
 
     /* 휴가/공휴일 레이블 */
@@ -633,17 +660,23 @@ footer {
 
     /* 요약 패널 */
     .summary-panel {
-        grid-template-columns: 1fr;
-        padding: 10px;
-        gap: 8px;
+        grid-template-columns: repeat(2, 1fr);
+        padding: 8px 10px;
+        gap: 6px 8px;
+    }
+
+    .summary-item {
+        gap: 2px;
     }
 
     .summary-label {
-        font-size: 0.75em;
+        font-size: 0.7em;
+        line-height: 1.2;
     }
 
     .summary-value {
-        font-size: 1.1em;
+        font-size: 0.95em;
+        line-height: 1.2;
     }
 
     /* 푸터 버튼 */

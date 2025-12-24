@@ -553,11 +553,11 @@ function addLockIcon(date) {
     const cell = document.querySelector(`.day-cell[data-date="${dateStr}"]`);
     if (!cell) return;
 
-    const dayNumberDiv = cell.querySelector('.day-number');
-    if (!dayNumberDiv) return;
+    const container = cell.querySelector('.checkbox-lock-container');
+    if (!container) return;
 
     // Remove existing lock icon if any
-    const existingLock = dayNumberDiv.querySelector('.lock-icon');
+    const existingLock = container.querySelector('.lock-icon');
     if (existingLock) existingLock.remove();
 
     // Add lock icon
@@ -568,7 +568,7 @@ function addLockIcon(date) {
         e.stopPropagation();
         toggleManualLock(date);
     });
-    dayNumberDiv.appendChild(lockIcon);
+    container.appendChild(lockIcon);
 }
 
 // Remove lock icon from a day
@@ -579,10 +579,10 @@ function removeLockIcon(date) {
     const cell = document.querySelector(`.day-cell[data-date="${dateStr}"]`);
     if (!cell) return;
 
-    const dayNumberDiv = cell.querySelector('.day-number');
-    if (!dayNumberDiv) return;
+    const container = cell.querySelector('.checkbox-lock-container');
+    if (!container) return;
 
-    const lockIcon = dayNumberDiv.querySelector('.lock-icon');
+    const lockIcon = container.querySelector('.lock-icon');
     if (lockIcon) lockIcon.remove();
 }
 
@@ -955,9 +955,11 @@ function createDayCell(date, isOtherMonth, calendarGrid) {
     dayOfWeek.textContent = dayOfWeekNames[date.getDay()];
     cell.appendChild(dayOfWeek);
 
-    // Add checkbox for weekdays (not weekends or holidays) to exclude from calculation
-    // But only for current month days
+    // Checkbox and lock icon container (체크박스와 자물쇠를 세로로 배치)
     if (!isWeekendDay && !holidayName && !isOtherMonth) {
+        const checkboxLockContainer = document.createElement('div');
+        checkboxLockContainer.className = 'checkbox-lock-container';
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.className = 'exclude-checkbox';
@@ -966,7 +968,21 @@ function createDayCell(date, isOtherMonth, calendarGrid) {
         checkbox.addEventListener('change', () => {
             toggleVacation(date);
         });
-        cell.appendChild(checkbox);
+        checkboxLockContainer.appendChild(checkbox);
+
+        // Add lock icon for manually modified days (only current month)
+        if (isManuallyModified(date)) {
+            const lockIcon = document.createElement('span');
+            lockIcon.className = 'lock-icon locked';
+            lockIcon.title = '클릭하여 잠금 해제 (자동 조정 허용)';
+            lockIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleManualLock(date);
+            });
+            checkboxLockContainer.appendChild(lockIcon);
+        }
+
+        cell.appendChild(checkboxLockContainer);
     }
 
     // Day number
@@ -976,18 +992,6 @@ function createDayCell(date, isOtherMonth, calendarGrid) {
     const dayText = document.createElement('span');
     dayText.textContent = date.getDate();
     dayNumber.appendChild(dayText);
-
-    // Add lock icon for manually modified days (only current month)
-    if (!isWeekendDay && !holidayName && isManuallyModified(date) && !isOtherMonth) {
-        const lockIcon = document.createElement('span');
-        lockIcon.className = 'lock-icon locked';
-        lockIcon.title = '클릭하여 잠금 해제 (자동 조정 허용)';
-        lockIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleManualLock(date);
-        });
-        dayNumber.appendChild(lockIcon);
-    }
 
     cell.appendChild(dayNumber);
 
