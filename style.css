@@ -324,8 +324,17 @@ footer {
     margin-top: 30px;
     text-align: center;
     display: flex;
+    flex-direction: column;
     gap: 15px;
     justify-content: center;
+    align-items: center;
+}
+
+.footer-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .reset-button,
@@ -374,6 +383,24 @@ footer {
 
 .manage-holidays-button:hover {
     background: #5568d3;
+}
+
+/* Copyright */
+.copyright {
+    margin-top: 5px;
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+.copyright a {
+    color: #667eea;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.copyright a:hover {
+    color: #5568d3;
+    text-decoration: underline;
 }
 
 /* Modal Styles */
