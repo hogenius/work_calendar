@@ -148,6 +148,15 @@ function setupEventListeners() {
             closeHolidayModal();
         }
     });
+
+    // Handle window resize to update layout (desktop <-> mobile)
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            renderCalendar(currentYear, currentMonth);
+        }, 250);
+    });
 }
 
 // Navigate months
@@ -747,7 +756,14 @@ function autoAdjustFutureWeekdays() {
             const bar = barContainer.querySelector('.hours-bar');
             const display = barContainer.querySelector('.hours-display');
             if (bar && display) {
-                bar.style.height = `${getBarHeightPercent(adjustedHours)}%`;
+                const isMobile = window.innerWidth <= 768;
+                const sizePercent = getBarHeightPercent(adjustedHours);
+                if (isMobile) {
+                    bar.style.width = `${sizePercent}%`;
+                    bar.style.height = '100%';
+                } else {
+                    bar.style.height = `${sizePercent}%`;
+                }
                 display.textContent = formatHoursMinutes(adjustedHours);
                 updateBarColor(bar, adjustedHours);
             }
@@ -793,9 +809,15 @@ function createBar(date, initialValue) {
     display.className = 'hours-display';
     display.textContent = formatHoursMinutes(initialValue);
 
-    // Set initial height
-    const heightPercent = getBarHeightPercent(initialValue);
-    bar.style.height = `${heightPercent}%`;
+    // Set initial size (height for desktop, width for mobile)
+    const sizePercent = getBarHeightPercent(initialValue);
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        bar.style.width = `${sizePercent}%`;
+        bar.style.height = '100%';
+    } else {
+        bar.style.height = `${sizePercent}%`;
+    }
     updateBarColor(bar, initialValue);
 
     bar.appendChild(display);
@@ -806,15 +828,31 @@ function createBar(date, initialValue) {
 
     const updateHoursFromClick = (e) => {
         const rect = container.getBoundingClientRect();
-        const clickY = e.clientY - rect.top;
-        const containerHeight = rect.height;
+        const isMobile = window.innerWidth <= 768;
 
-        // Calculate from bottom (invert the percentage)
-        const clickPercent = ((containerHeight - clickY) / containerHeight) * 100;
+        let clickPercent;
+
+        if (isMobile) {
+            // Mobile: horizontal (left to right)
+            const clickX = e.clientX - rect.left;
+            const containerWidth = rect.width;
+            clickPercent = (clickX / containerWidth) * 100;
+        } else {
+            // Desktop: vertical (bottom to top)
+            const clickY = e.clientY - rect.top;
+            const containerHeight = rect.height;
+            clickPercent = ((containerHeight - clickY) / containerHeight) * 100;
+        }
+
         const newHours = getHoursFromPercent(Math.max(0, Math.min(100, clickPercent)));
 
         // Update bar
-        bar.style.height = `${getBarHeightPercent(newHours)}%`;
+        if (isMobile) {
+            bar.style.width = `${getBarHeightPercent(newHours)}%`;
+            bar.style.height = '100%';
+        } else {
+            bar.style.height = `${getBarHeightPercent(newHours)}%`;
+        }
         display.textContent = formatHoursMinutes(newHours);
         updateBarColor(bar, newHours);
         saveHours(date, newHours, true); // Mark as manually modified
@@ -827,6 +865,7 @@ function createBar(date, initialValue) {
         updateSummary();
     };
 
+    // Mouse events
     container.addEventListener('mousedown', (e) => {
         isDragging = true;
         updateHoursFromClick(e);
@@ -839,6 +878,25 @@ function createBar(date, initialValue) {
     });
 
     document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    // Touch events for mobile
+    container.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        const touch = e.touches[0];
+        updateHoursFromClick(touch);
+        e.preventDefault();
+    });
+
+    document.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length > 0) {
+            const touch = e.touches[0];
+            updateHoursFromClick(touch);
+        }
+    });
+
+    document.addEventListener('touchend', () => {
         isDragging = false;
     });
 
@@ -890,9 +948,12 @@ function createDayCell(date, isOtherMonth, calendarGrid) {
         cell.classList.add('today');
     }
 
-    // Day number
-    const dayNumber = document.createElement('div');
-    dayNumber.className = 'day-number';
+    // Day of week (요일) - 모바일에서만 표시됨 (CSS로 제어)
+    const dayOfWeekNames = ['일', '월', '화', '수', '목', '금', '토'];
+    const dayOfWeek = document.createElement('div');
+    dayOfWeek.className = 'day-of-week';
+    dayOfWeek.textContent = dayOfWeekNames[date.getDay()];
+    cell.appendChild(dayOfWeek);
 
     // Add checkbox for weekdays (not weekends or holidays) to exclude from calculation
     // But only for current month days
@@ -905,8 +966,12 @@ function createDayCell(date, isOtherMonth, calendarGrid) {
         checkbox.addEventListener('change', () => {
             toggleVacation(date);
         });
-        dayNumber.appendChild(checkbox);
+        cell.appendChild(checkbox);
     }
+
+    // Day number
+    const dayNumber = document.createElement('div');
+    dayNumber.className = 'day-number';
 
     const dayText = document.createElement('span');
     dayText.textContent = date.getDate();

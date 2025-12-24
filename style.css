@@ -179,6 +179,11 @@ header h1 {
     align-items: center;
 }
 
+/* 데스크톱에서는 요일 숨김 */
+.day-of-week {
+    display: none;
+}
+
 .day-cell.weekend .day-number,
 .day-cell.holiday .day-number {
     color: #dc3545;
@@ -489,33 +494,199 @@ footer {
 }
 
 @media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
     .container {
-        padding: 15px;
+        padding: 10px;
+        width: 100%;
     }
 
     header h1 {
-        font-size: 1.5em;
+        font-size: 1.3em;
+        margin-bottom: 10px;
     }
 
     .calendar-header {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        gap: 10px;
+        padding: 8px 10px;
+        flex-wrap: wrap;
     }
 
+    .calendar-header h2 {
+        font-size: 1.1em;
+        width: 100%;
+        text-align: center;
+        order: -1;
+    }
+
+    .nav-button {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+
+    /* 모바일: 그리드를 1열로 변경 */
     .calendar-grid {
-        gap: 5px;
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
 
+    /* 모바일: 요일 헤더 숨김 */
+    .day-header {
+        display: none;
+    }
+
+    /* 모바일: 날짜 셀을 가로 레이아웃으로 변경 */
     .day-cell {
-        padding: 10px;
-        min-height: 120px;
+        flex-direction: row;
+        min-height: 70px;
+        height: 70px;
+        padding: 10px 12px;
+        gap: 8px;
+        align-items: center;
     }
 
+    /* 요일 표시 (모바일 전용) */
+    .day-of-week {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1em;
+        font-weight: bold;
+        color: #495057;
+        min-width: 24px;
+        margin-right: 4px;
+    }
+
+    .day-cell.weekend .day-of-week {
+        color: #dc3545;
+    }
+
+    /* 체크박스를 요일 다음에 배치 */
+    .exclude-checkbox {
+        margin-right: 8px;
+        margin-left: 0;
+        margin-top: 0;
+        align-self: center;
+    }
+
+    /* 날짜 번호 영역 */
+    .day-number {
+        min-width: auto;
+        font-size: 1.1em;
+        margin-bottom: 0;
+        flex-direction: row;
+        gap: 8px;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    /* 휴가/공휴일 레이블 */
+    .excluded-label,
+    .holiday-name {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        font-size: 1em;
+        margin-bottom: 0;
+    }
+
+    /* 시간 바 컨테이너를 가로로 확장 */
+    .hours-control {
+        flex: 1;
+        margin-top: 0;
+        min-height: 50px;
+    }
+
+    .hours-bar-container {
+        min-height: 50px;
+        height: 50px;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+
+    .hours-bar {
+        min-height: 50px;
+        height: 50px;
+        min-width: 30px;
+        width: auto;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+    }
+
+    .hours-display {
+        font-size: 1em;
+        padding-bottom: 0;
+    }
+
+    /* 잠금 아이콘 위치 조정 */
+    .lock-icon {
+        font-size: 1.1em;
+        margin-left: 0;
+        margin-top: 4px;
+    }
+
+    /* 요약 패널 */
     .summary-panel {
         grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 8px;
     }
 
+    .summary-label {
+        font-size: 0.75em;
+    }
+
+    .summary-value {
+        font-size: 1.1em;
+    }
+
+    /* 푸터 버튼 */
     footer {
         flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .reset-button,
+    .import-button,
+    .clear-button,
+    .manage-holidays-button {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.95em;
+    }
+
+    /* 모달 */
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+
+    .modal-header h2 {
+        font-size: 1.1em;
+    }
+
+    .modal-body {
+        padding: 15px;
+    }
+
+    #importTextarea,
+    #holidayTextarea {
+        font-size: 0.85em;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .parse-button,
+    .cancel-button {
+        width: 100%;
     }
 }
