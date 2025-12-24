@@ -3,7 +3,10 @@
     "allow": [
       "Bash(dir:*)",
       "Bash(start index.html)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)"
     ]
   }
 }
